@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:id="@+id/scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Enter How Much Cookies You Want"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="1241dp"
+                android:layout_height="match_parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/SecondExcercise"
+                    android:layout_width="393dp"
+                    android:layout_height="662dp"
+                    android:layout_marginBottom="13dp"
+                    android:background="@drawable/custom_border"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/FourthExcercise"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="355dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.507"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/istockphoto_1208436411_612x612" />
+
+                    <Button
+                        android:id="@+id/Fifth_excercise"
+                        android:layout_width="227dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="102dp"
+                        android:layout_marginEnd="102dp"
+                        android:layout_marginBottom="28dp"
+                        android:backgroundTint="#ADE47C"
+                        android:text="Начать упражнение"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/box"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/box"
+                        android:layout_width="368dp"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/custom_border"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+                        <TextView
+                            android:id="@+id/Excercisenumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="102dp"
+                            android:layout_marginEnd="102dp"
+                            android:fontFamily="sans-serif"
+                            android:text="Упражнение номер 3: \n Поднятие и опускание головы с фиксацией зрения"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ScrollView
+                            android:layout_width="342dp"
+                            android:layout_height="191dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/Excercisenumber">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/ExcerciseDescription"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="0dp"
+                                    android:text="Инструкция по выполнению: \n Перед запуском приложения, вам необходимо пройти калибровку - нажав на иконку сверху. Перед калибровкой вам необходимо - зафиксировать телефон на твердой поверхности и отодвинуться на максимально возможное расстояние.\n Во время выполнения упражнения вам следует находится в положении в котором была выполнена калибровка, поднять голову не отрывая взгляд от объектива, затем повторить действия опустив голову "
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </ScrollView>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/FourthExcercise"
+                    android:layout_width="393dp"
+                    android:layout_height="662dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="13dp"
+                    android:background="@drawable/custom_border"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/third_excerciseLay"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="355dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.507"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/istockphoto_1208436411_612x612" />
+
+                    <Button
+                        android:id="@+id/fourth_excercise"
+                        android:layout_width="227dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="102dp"
+                        android:layout_marginEnd="102dp"
+                        android:layout_marginBottom="28dp"
+                        android:backgroundTint="#ADE47C"
+                        android:text="Начать упражнение"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/box4"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/box4"
+                        android:layout_width="368dp"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/custom_border"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView4">
+
+                        <TextView
+                            android:id="@+id/Excercisenumber4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="102dp"
+                            android:layout_marginEnd="102dp"
+                            android:fontFamily="sans-serif"
+                            android:text="Упражнение номер 2: \n Поворот головы с закрытыми глазами с фиксацией зрения"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ScrollView
+                            android:layout_width="342dp"
+                            android:layout_height="191dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/Excercisenumber4">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/ExcerciseDescription4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="0dp"
+                                    android:text="Инструкция по выполнению: \n Перед запуском приложения, вам необходимо пройти калибровку - нажав на иконку сверху. Перед калибровкой вам необходимо - зафиксировать телефон на твердой поверхности и отодвинуться на максимально возможное расстояние.\n Во время выполнения упражнения вам следует находится в положении в котором была выполнена калибровка, повернуть голову направо с закрытыми глазами не отрывая взгляд от объектива, повернув голову до упора открыть глаза, затем повторить действия повернув голову налево"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </ScrollView>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/third_excerciseLay"
+                    android:layout_width="393dp"
+                    android:layout_height="662dp"
+                    android:layout_marginBottom="13dp"
+                    android:background="@drawable/custom_border"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="355dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.507"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/fds" />
+
+                    <Button
+                        android:id="@+id/third_excercise"
+                        android:layout_width="227dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="102dp"
+                        android:layout_marginEnd="102dp"
+                        android:layout_marginBottom="28dp"
+                        android:backgroundTint="#ADE47C"
+                        android:text="Начать упражнение"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/box3"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/box3"
+                        android:layout_width="343dp"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/custom_border"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView3">
+
+                        <TextView
+                            android:id="@+id/Block3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Блок 1: Слежение за объектом"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/Excercisenumber3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="sans-serif"
+                            android:text="Упражнение номер 1: \n Поворот головы с фиксацией зрения"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.59"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/Block3" />
+
+                        <ScrollView
+                            android:layout_width="317dp"
+                            android:layout_height="168dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/Excercisenumber3">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/ExcerciseDescription3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="0dp"
+                                    android:text="Инструкция по выполнению: \n Перед запуском приложения, вам необходимо пройти калибровку - нажав на иконку сверху. Перед калибровкой вам необходимо - зафиксировать телефон на твердой поверхности и отодвинуться на максимально возможное расстояние.\n Во время выполнения упражнения вам следует находится в положении в котором была выполнена калибровка и двигать головой влево и вправо смотря в объектив камеры."
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </ScrollView>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/calibration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/instruction"
+            android:drawableTop="@drawable/calibration_1_48"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

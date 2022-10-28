@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/Calibration"
+        android:orderInCategory="100"
+        android:title="@string/calibration"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/Progress"
+        android:orderInCategory="100"
+        android:title="@string/progress"
+        app:showAsAction="never"/>
+</menu>
