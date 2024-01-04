@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(activitynew);
         });
 
-        Button fourth = findViewById(R.id.fourth_excercise);
-        fourth.setOnClickListener(view -> {
-            Intent activityFourth = new Intent(getApplicationContext(), FourthExcercise.class);
-            startActivity(activityFourth);
-        });
+//        Button fourth = findViewById(R.id.fourth_excercise);
+//        fourth.setOnClickListener(view -> {
+//            Intent activityFourth = new Intent(getApplicationContext(), FourthExcercise.class);
+//            startActivity(activityFourth);
+//        });
     }
 
     @Override

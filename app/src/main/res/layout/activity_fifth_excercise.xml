@@ -14,13 +14,6 @@
         android:orientation="horizontal">
 
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button" />
-
         <TextView
             android:id="@+id/accept"
             android:layout_width="104dp"
@@ -29,16 +22,37 @@
             android:background="#E53935" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/preview_display_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="688dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/no_view"
+        <FrameLayout
+            android:id="@+id/preview_display_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:layout_height="671dp">
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/no_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Button" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

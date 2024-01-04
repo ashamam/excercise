@@ -116,6 +116,7 @@ public class Calibration extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calib);
         // TODO: Add a toggle to switch between the original face mesh and attention mesh.
@@ -274,7 +275,7 @@ public class Calibration extends AppCompatActivity {
             DepthUpDown = Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
             VerticalSide = (float) Angle(noseBridgeX, leftcenterX, noseBridgeX + 10
                     , noseBridgeY, leftcenterY, noseBridgeY+10);
-            Scale = nose2 - nose1;
+            Scale = dist / irisDist;
 
             // Log.v("eaf", HorizontalSideLeft +"     " + HorizontalSideRight1);
 

@@ -137,6 +137,7 @@ public class ThirdExercise extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third_excercise);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);

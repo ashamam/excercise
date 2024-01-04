@@ -107,10 +107,12 @@ public class FifthExcercise extends AppCompatActivity {
             return point * 1920;
         }
     }
+
     private float Distance(float X1,float X2, float Y1, float Y2)
     {
         return (float)Math.sqrt(sqr(X1 - X2) + sqr(Y1 - Y2));
     }
+
     static float sqr(float a){
         return a*a;
     }
@@ -138,19 +140,26 @@ public class FifthExcercise extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fifth_excercise);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
         if(mSettings.contains("VerticalSide"))
             Depth = mSettings.getFloat("DepthUpDown", 0);
+
         if(mSettings.contains("IrisDiameterRight"))
             IrisDiameterRight = mSettings.getFloat("IrisDiameterRight", 0);
+
         if (mSettings.contains("IrisDiameterLeft"))
             IrisDiameterLeft = mSettings.getFloat("IrisDiameterLeft", 0);
+
         if (mSettings.contains("noseScale"))
             Scale = mSettings.getFloat("noseScale", 0);
+
         if(Depth == 0){
             Alert();
+
         }
 
         // TODO: Add a toggle to switch between the original face mesh and attention mesh.
@@ -293,7 +302,7 @@ public class FifthExcercise extends AppCompatActivity {
 
         float irisDiameterRightNew = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
 
-        float irisDiameterLeftNew = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+        float irisDiameterLeftNew = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY) * Scale;
 
 
         if(dist < 330 && dist > 270 && !start)
@@ -307,7 +316,9 @@ public class FifthExcercise extends AppCompatActivity {
                 start = true;
                 startTime = System.currentTimeMillis();
             });
-        }else{
+        }
+        else
+        {
             Button startbtn = findViewById(R.id.button3);
             startbtn.setOnClickListener(view -> {
                 PopUp2();
@@ -316,30 +327,38 @@ public class FifthExcercise extends AppCompatActivity {
 
         if(start) {
 
-            Accept();
+            elapsedTime = System.currentTimeMillis() - startTime;
+            long elapsedSeconds = elapsedTime / 1000;
+            long secondsDisplay = elapsedSeconds % 60;
+            long minutesDisplay = elapsedTime / 60;
+
+            TextView timer = findViewById(R.id.accept);
+
+            //чтобы изменялось только при запуске алгоритма
+            if(secondsDisplay == 0)
+                timer.setBackgroundResource(R.color.white);
+
+            timer.setText((int)minutesDisplay +  ":" +  (int)secondsDisplay);
+
 
             depth= Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
 
             ScaleAbs = Scale / ScaleNew;
 
-
-
-            elapsedTime = System.currentTimeMillis() - startTime;
-            long elapsedSeconds = elapsedTime / 1000;
-            long secondsDisplay = elapsedSeconds % 60;
-
-            if (depth > Depth + 20 && !FlagFirstCheckD) {
+            if (depth > Depth + 10 && !FlagFirstCheckD) {
+                Log.v("eaf", "yAAAAAYniz" + depth +" "+ Depth);
                 if (IrisDiameterRight + 5 > irisDiameterRightNew
                         && IrisDiameterRight - 5 < irisDiameterRightNew) {
                     FlagFirstCheckD = true;
-                    Log.v("eaf", "yAAAAAYniz" + depth +" "+ Depth);
+                    Log.v("eaf", "yAAAAAYnifaskdjflasdjfaz" + depth +" "+ Depth);
                 }
             }
-            if (depth < Depth - 20 && !FlagFirstCheckU) {
+            if (depth < Depth - 10 && !FlagFirstCheckU) {
+                Log.v("eaf", "yAAAAAYverh" + depth +" "+ Depth);
                 if (IrisDiameterLeft + 5 > irisDiameterLeftNew
                         && IrisDiameterLeft - 5 < irisDiameterLeftNew) {
                     FlagFirstCheckU = true;
-                    Log.v("eaf", "yAAAAAYverh" + depth +" "+ Depth);
+                    Log.v("eaf", "yAAkfjsalkdfj;asdlfkjAAAYverh" + depth +" "+ Depth);
 
                 }
             }
