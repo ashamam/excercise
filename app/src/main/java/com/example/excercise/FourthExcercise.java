@@ -41,6 +41,7 @@ import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
 import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
 
 import java.util.List;
+import java.util.Objects;
 
 /** Main activity of MediaPipe Face Mesh app. */
 public class FourthExcercise extends AppCompatActivity {
@@ -167,8 +168,8 @@ public class FourthExcercise extends AppCompatActivity {
             String[] cameraIds = manager.getCameraIdList();
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraIds[1]);
             //303 gain in scientific way!
-            FOCAL_LENGTH = (float) (characteristics.get(CameraCharacteristics
-                    .LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0] * 303.03);
+            FOCAL_LENGTH = (float) (Objects.requireNonNull(characteristics.get(CameraCharacteristics
+                    .LENS_INFO_AVAILABLE_FOCAL_LENGTHS))[0] * 303.03);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -263,6 +264,12 @@ public class FourthExcercise extends AppCompatActivity {
         }
     }
 
+    private byte data = 0;
+    private double[][] correct = new double[6][10];
+    private median median = new median();
+    private float[] medianActual = new float[6];
+    private boolean Flag = true;
+
     private void logNoseLandmark(FaceMeshResult result, boolean showPixelValues) {
         if (result == null || result.multiFaceLandmarks().isEmpty()) {
             return;
@@ -270,117 +277,138 @@ public class FourthExcercise extends AppCompatActivity {
 
         List<NormalizedLandmark> landmarks = result.multiFaceLandmarks().get(0).getLandmarkList();
         float leftIrisX = Unnormalize(true, landmarks.get(474).getX());
-        float leftIrisY = Unnormalize(false,landmarks.get(474).getY());
-        float rightIrisX = Unnormalize(true,landmarks.get(476).getX());
-        float rightIrisY = Unnormalize(false,landmarks.get(476).getY());
-        float leftcenterX = Unnormalize(true, landmarks.get(473).getX());
-        float leftcenterY = Unnormalize(false, landmarks.get(473).getY());
-        float noseBridgeX = Unnormalize(true, landmarks.get(168).getX());
-        float noseBridgeY = Unnormalize(false, landmarks.get(168).getY());
-        //float leftSideX = Unnormalize(true, landmarks.get(323).getX());
-        float leftSideX = Unnormalize(true, landmarks.get(33).getX());
-        float leftSideY = Unnormalize(false, landmarks.get(33).getY());
+        float leftIrisY = Unnormalize(false, landmarks.get(474).getY());
+        float rightIrisX = Unnormalize(true, landmarks.get(476).getX());
+        float rightIrisY = Unnormalize(false, landmarks.get(476).getY());
         float rightIrisRSX = Unnormalize(true, landmarks.get(469).getX());
         float rightIrisRSY = Unnormalize(false, landmarks.get(469).getY());
         float rightIrisLSX = Unnormalize(true, landmarks.get(471).getX());
         float rightIrisLSY = Unnormalize(false, landmarks.get(471).getY());
+
         float nose1 = Unnormalize(false, landmarks.get(6).getY());
         float nose2 = Unnormalize(false, landmarks.get(197).getY());
-        float ry1 = landmarks.get(5).getY()*1920f;
-        float ry2 = landmarks.get(4).getY()*1920f;
 
-        float ray1 = landmarks.get(373).getY()*1920f;
-        float ray2 = landmarks.get(386).getY()*1920f;
-        float lay1 = landmarks.get(144).getY()*1920f;
-        float lay2 = landmarks.get(160).getY()*1920f;
+        float ry1 = landmarks.get(5).getY() * 1920f;
+        float ry2 = landmarks.get(4).getY() * 1920f;
+        float ray1 = landmarks.get(373).getY() * 1920f;
+        float ray2 = landmarks.get(387).getY() * 1920f;
+        float lay1 = landmarks.get(144).getY() * 1920f;
+        float lay2 = landmarks.get(160).getY() * 1920f;
+
+        float ScaleNew = 0;
+        float dist = 0;
+        float depth = 0;
+        float irisDiameterRightNew = 0;
+        float irisDiameterLeftNew = 0;
+
 
         ratior = (ray1 - ray2) / (ry2 - ry1);
 
         ratiol = (lay1 - lay2) / (ry2 - ry1);
 
-        float ScaleNew = nose2 - nose1;
+        if (data < 10) {
+            //ScaleNew
+            correct[0][data] = nose2 - nose1;
+            //irisDist
+            correct[1][data] = DistanceToIris(Distance(leftIrisX, rightIrisX,
+                    leftIrisY, rightIrisY));
 
-        float irisDist = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
-
-        float dist = DistanceToIris(irisDist);
-
-        float depth = landmarks.get(323).getZ() * 100;
-
-        float irisDiameterRightNew = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
-
-        float irisDiameterLeftNew = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
-
-        if(dist < 330 && dist > 270 && !start)
-            Accept();
-        else
-            Decline();
-
-        if(readyToStart){
-            Button startbtn = findViewById(R.id.button4);
-            startbtn.setOnClickListener(view -> {
-                start = true;
-                startTime = System.currentTimeMillis();
-            });
-        }else{
-            Button startbtn = findViewById(R.id.button4);
-            startbtn.setOnClickListener(view -> {
-                PopUp2();
-            });
+            //depth
+            //Log.v("depth", "ny pizda" + landmarks.get(323).getZ() * 100);
+            correct[2][data] = landmarks.get(323).getZ() * 100;
+            //irisDiameterRightNew
+            correct[3][data] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
+            //irisDiameterLeftNew
+            correct[4][data] = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+            data++;
+        } else {
+            medianActual = median.Median(correct);
+            //Log.v("depth", "ny pizda" + medianActual[2]);
+            ScaleNew = medianActual[0];
+            dist = medianActual[1];
+            depth = medianActual[2];
+            irisDiameterRightNew = medianActual[3];
+            irisDiameterLeftNew = medianActual[4];
+            data = 0;
         }
+        if (ScaleNew != 0) {
+            if (dist < 330 && dist > 270 && !start)
+                Accept();
+            else
+                Decline();
 
-        // Log.v("eaf", "PRAVO   " + IrisDiameterRight + "   " + irisDiameterRightNew);
-        if(start) {
-            Accept();
-
-            ScaleAbs = Scale / ScaleNew;
-
-            elapsedTime = System.currentTimeMillis() - startTime;
-            long elapsedSeconds = elapsedTime / 1000;
-            long secondsDisplay = elapsedSeconds % 60;
-
-            if (depth - 5 > Depth && !FlagFirstCheckR) {
-                //  Log.v("eaf", "PRAVO");
-                if (ratior < 0.8) {
-                    Log.v("eaf", "YEEEEEEEEE");
-                    FlagFirstCheckR = true;
-                }
+            if (readyToStart) {
+                Button startbtn = findViewById(R.id.button4);
+                startbtn.setOnClickListener(view -> {
+                    start = true;
+                    startTime = System.currentTimeMillis();
+                });
+            } else {
+                Button startbtn = findViewById(R.id.button4);
+                startbtn.setOnClickListener(view -> {
+                    PopUp2();
+                });
             }
-            if (depth + 10 < Depth && !FlagFirstCheckL) {
-                if (ratiol < 0.8) {
-                    Log.v("eaf", "YEEEEEEEEE");
-                    FlagFirstCheckL = true;
-                }
-            }
-            if (depth - 6 > Depth && !FlagSecondCheckR) {
-                Log.v("eaf", IrisDiameterRight + "     " + irisDiameterRightNew * ScaleAbs);
-                if (IrisDiameterRight + 5 > irisDiameterRightNew
-                        && IrisDiameterRight - 5 < irisDiameterRightNew && ratior > 0.8) {
+
+            // Log.v("eaf", "PRAVO   " + IrisDiameterRight + "   " + irisDiameterRightNew);
+            if (start) {
+                Accept();
+
+                ScaleAbs = Scale/ScaleNew;
+
+                elapsedTime = System.currentTimeMillis() - startTime;
+                long elapsedSeconds = elapsedTime / 1000;
+                long secondsDisplay = elapsedSeconds % 60;
+
+                Log.v("depth", String.valueOf(depth) + "   " + String.valueOf(Depth));
+                //первый увеличивался когда телефон уходил налево
+                Log.v("raio", String.valueOf(ratior) +" "+ String.valueOf(ratiol));
+
+                if (depth - 5 > Depth && !FlagFirstCheckR) {
                     //  Log.v("eaf", "PRAVO");
-                    Log.v("eaf", "YEEEEEEEEE");
-                    FlagSecondCheckR = true;
+                    if (ratior > 0.8 && ratior < 0.9 && ratiol < 0.8) {
+                        Log.v("eaf", "это право на пути");
+                        FlagFirstCheckR = true;
+                    }
                 }
-            }
 
-            if (depth + 13 < Depth && !FlagSecondCheckL) {
-                Log.v("eaf", IrisDiameterLeft + "     " + irisDiameterLeftNew * ScaleAbs + "    " + ratiol);
-                if (IrisDiameterLeft + 5 > irisDiameterLeftNew
-                        && IrisDiameterLeft - 5 < irisDiameterLeftNew && ratiol > 0.8) {
-                    //    Log.v("eaf", "LEVO");
-                    Log.v("eaf", "YEEEEEEEEE");
-                    FlagSecondCheckL = true;
+                if (depth + 10 < Depth && !FlagFirstCheckL) {
+                    if (ratiol > 0.8 && ratiol < 0.9 && ratiol < 0.8) {
+                        Log.v("eaf", "это лево на пути");
+                        FlagFirstCheckL = true;
+                    }
                 }
-            }
+
+                Log.v("eaf", IrisDiameterRight + "     " + (irisDiameterRightNew - 3) * ScaleAbs);
+
+                if (!FlagSecondCheckR) {
+                    if (IrisDiameterRight + 10 > (irisDiameterRightNew - 3) * ScaleAbs
+                            && IrisDiameterRight - 10 < (irisDiameterRightNew - 3) * ScaleAbs && ratior < 0.8) {
+                        //  Log.v("eaf", "PRAVO");
+                        Log.v("eaf", "это право до упора");
+                        FlagSecondCheckR = true;
+                    }
+                }
+
+                if (!FlagSecondCheckL) {
+                    if (IrisDiameterLeft + 10 > (irisDiameterLeftNew - 3) * ScaleAbs
+                            && IrisDiameterLeft - 10 < (irisDiameterLeftNew - 3) * ScaleAbs && ratiol < 0.8) {
+                        //    Log.v("eaf", "LEVO");
+                        Log.v("eaf", "это лево до упора");
+                        FlagSecondCheckL = true;
+                    }
+                }
 
 
-            if (FlagFirstCheckR && FlagSecondCheckR && FlagFirstCheckL && FlagSecondCheckL && flag) {
-                //   flag = false;
-                FlagFirstCheckL = false;
-                FlagSecondCheckL = false;
-                FlagSecondCheckR = false;
-                FlagFirstCheckR = false;
-                count += 1;
-                //ExComplete();
-            }
+                if (FlagFirstCheckR && FlagSecondCheckR && FlagFirstCheckL && FlagSecondCheckL && flag) {
+                    //   flag = false;
+                    FlagFirstCheckL = false;
+                    FlagSecondCheckL = false;
+                    FlagSecondCheckR = false;
+                    FlagFirstCheckR = false;
+                    count += 1;
+                   // ExComplete();
+                }
 
             if (secondsDisplay == 30) {
                 start = false;
@@ -388,6 +416,8 @@ public class FourthExcercise extends AppCompatActivity {
                 if (count % 2 != 0)
                     count += 1;
                 ExComplete();
+            }
+
             }
         }
     }

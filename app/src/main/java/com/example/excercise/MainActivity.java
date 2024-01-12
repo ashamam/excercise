@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Button fifth = findViewById(R.id.Fifth_excercise);
         fifth.setOnClickListener(view ->
         {
-            Intent intent = new Intent(getApplicationContext(), FifthExcercise.class);
+            Intent intent = new Intent(getApplicationContext(), FourthExcercise.class);
             startActivity(intent);
         });
 

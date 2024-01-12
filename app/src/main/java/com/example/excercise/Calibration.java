@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 // ContentResolver dependency
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
 import com.google.mediapipe.solutioncore.CameraInput;
@@ -35,6 +36,7 @@ import com.google.mediapipe.solutions.facemesh.FaceMesh;
 import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
 import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
 
+import java.util.Arrays;
 import java.util.List;
 
 /** Main activity of MediaPipe Face Mesh app. */
@@ -46,8 +48,6 @@ public class Calibration extends AppCompatActivity {
     SharedPreferences mSettings;
 
     private float FOCAL_LENGTH;
-
-    private static boolean flag = true;
 
     private static float RightEyeDiameter;
 
@@ -121,7 +121,7 @@ public class Calibration extends AppCompatActivity {
         setContentView(R.layout.calib);
         // TODO: Add a toggle to switch between the original face mesh and attention mesh.
         setupLiveDemoUiComponents();
-        flag = true;
+
     }
 
     @Override
@@ -137,6 +137,7 @@ public class Calibration extends AppCompatActivity {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+
         // Restarts the camera and the opengl surface rendering.
         cameraInput = new CameraInput(this);
         cameraInput.setNewFrameListener(textureFrame -> facemesh.send(textureFrame));
@@ -187,7 +188,7 @@ public class Calibration extends AppCompatActivity {
 
         facemesh.setResultListener(
                 faceMeshResult -> {
-                    logNoseLandmark(faceMeshResult, /*showPixelValues=*/ false);
+                    logNoseLandmark(faceMeshResult /*showPixelValues=*/);
                     glSurfaceView.setRenderData(faceMeshResult);
                     glSurfaceView.requestRender();
                 });
@@ -228,7 +229,20 @@ public class Calibration extends AppCompatActivity {
         }
     }
 
-    private void logNoseLandmark(FaceMeshResult result, boolean showPixelValues) {
+
+    private int count = 0;
+    private double[][] correct = new double[8][10];
+
+    private float[] medianTrue = new float[8];
+    private float[] medianFar = new float[8];
+    private float[] medianPhoneTurnL = new float[8];
+    private float[] medianPhoneTurnR = new float[8];
+    private byte flag = 0;
+    private float ratior = 0;
+    private float ratiol = 0;
+    private median median = new median();
+
+    private void logNoseLandmark(FaceMeshResult result) {
         if (result == null || result.multiFaceLandmarks().isEmpty()) {
             return;
         }
@@ -250,55 +264,207 @@ public class Calibration extends AppCompatActivity {
         float rightIrisLSY = Unnormalize(false, landmarks.get(471).getY());
         float rightSideX = Unnormalize(true, landmarks.get(263).getX());
         float rightSideY = Unnormalize(true, landmarks.get(263).getY());
-        float nose1 = Unnormalize(false, landmarks.get(6).getY());
-        float nose2 = Unnormalize(false, landmarks.get(197).getY());
         float foreheadUpX = Unnormalize(true, landmarks.get(9).getX());
         float foreheadUpY = Unnormalize(false, landmarks.get(9).getY());
         float foreheadDownX = Unnormalize(true, landmarks.get(10).getX());
         float foreheadDownY = Unnormalize(false, landmarks.get(10).getY());
+
+        float ry1 = landmarks.get(5).getY()*1920f;
+        float ry2 = landmarks.get(4).getY()*1920f;
+        float ray1 = landmarks.get(373).getY()*1920f;
+        float ray2 = landmarks.get(387).getY()*1920f;
+        float lay1 = landmarks.get(144).getY()*1920f;
+        float lay2 = landmarks.get(160).getY()*1920f;
+
+        float nose1 = Unnormalize(false, landmarks.get(6).getY());
+        float nose2 = Unnormalize(false, landmarks.get(197).getY());
+
 
         float irisDist = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
 
         float dist = DistanceToIris(irisDist);
 
 
-
         Log.v(TAG, String.valueOf(dist));
 
-        if (dist < 330 && dist > 270 && flag)  {
-            flag = false;
-            HorizontalSideLeft = Distance(leftSideX, rightIrisX, leftSideY, rightIrisY);
-            HorizontalSideRight = Distance(rightSideX, rightIrisRSX, rightSideY, rightIrisRSY) / 2;
-            LeftEyeDiameter = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
-            RightEyeDiameter = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
-            DepthForRightSide = landmarks.get(323).getZ()*100;
-            DepthUpDown = Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
-            VerticalSide = (float) Angle(noseBridgeX, leftcenterX, noseBridgeX + 10
-                    , noseBridgeY, leftcenterY, noseBridgeY+10);
-            Scale = dist / irisDist;
+        if (dist < 330 && dist > 270 && flag == 0) {
+            if (count < 10) {
 
-            // Log.v("eaf", HorizontalSideLeft +"     " + HorizontalSideRight1);
+                //HorizontalSideLeft
+                correct[0][count] = Distance(leftSideX, rightIrisX, leftSideY, rightIrisY);
 
-            runThread();
-        }
+                //HorizontalSideRight
+                correct[1][count] = Distance(rightSideX, rightIrisRSX, rightSideY, rightIrisRSY) / 2;
 
+                //LeftEyeDiameter
+                correct[2][count] = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+
+                //RightEyeDiameter
+                correct[3][count] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
+
+                //DepthForRightSide
+                correct[4][count] = landmarks.get(323).getZ() * 100;
+
+                //DepthUpDown
+                correct[5][count] = Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
+
+                //VerticalSide
+                correct[6][count] = (float) Angle(noseBridgeX, leftcenterX, noseBridgeX + 10
+                        , noseBridgeY, leftcenterY, noseBridgeY + 10);
+
+                //Scale
+                correct[7][count] = nose2 - nose1;
+
+                count++;
+
+                Log.v("eaf", HorizontalSideLeft + "     ");
+
+
+            } else {
+                Log.v("dada", Arrays.toString(correct[4]));
+                medianTrue = median.Median(correct);
+                count = 0;
+                flag++;
+            }
+                Log.v("pip", "WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                PopUp("Теперь отведите камеру подальше!");
+                runThread();
+            }
+
+//        if (dist < 550 && dist > 510 && flag == 1) {
+//
+//            if (count < 10) {
+//                //HorizontalSideLeft
+//                correct[0][count] = Distance(leftSideX, rightIrisX, leftSideY, rightIrisY);
+//
+//                //HorizontalSideRight
+//                correct[1][count] = Distance(rightSideX, rightIrisRSX, rightSideY, rightIrisRSY) / 2;
+//
+//                //LeftEyeDiameter
+//                correct[2][count] = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+//
+//                //RightEyeDiameter
+//                correct[3][count] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
+//
+//                //DepthForRightSide
+//                correct[4][count] = landmarks.get(323).getZ() * 100;
+//
+//                //DepthUpDown
+//                correct[5][count] = Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
+//
+//                //VerticalSide
+//                correct[6][count] = (float) Angle(noseBridgeX, leftcenterX, noseBridgeX + 10
+//                        , noseBridgeY, leftcenterY, noseBridgeY + 10);
+//
+//                //Scale
+//                correct[7][count] = dist / irisDist;
+//
+//                count++;
+//            } else {
+//                    medianFar = median.Median(correct);
+//                }
+//                flag++;
+//                Log.v("pip", "WORKFAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                PopUp("Теперь смотрите в камеру и двигайте телефон направо");
+//            }
+//
+//        double depth = landmarks.get(323).getZ() * 100;
+//
+//        double depthTrue = medianTrue[4];
+//
+//        if (dist < 550 && dist > 510 && flag == 2) {
+//
+//            if (count < 10) {
+//
+//                //LeftEyeDiameter
+//                correct[1][count] = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+//
+//                //RightEyeDiameter
+//                correct[2][count] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
+//
+//                //DepthForRightSide
+//                correct[3][count] = landmarks.get(323).getZ() * 100;
+//
+//                //Scale
+//                correct[4][count] = dist / irisDist;
+//
+//                count++;
+//            } else {
+//                medianPhoneTurnR = median.Median(correct);
+//                }
+//                flag++;
+//                Log.v("pip", "WORKPhoneTurnR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                PopUp("Теперь смотрите в камеру и двигайте телефон налево");
+//            }
+//
+//        if (dist < 550 && dist > 510 && flag == 1) {
+//
+//            if (count < 10) {
+//                //HorizontalSideLeft
+//                correct[0][count] = Distance(leftSideX, rightIrisX, leftSideY, rightIrisY);
+//
+//                //HorizontalSideRight
+//                correct[1][count] = Distance(rightSideX, rightIrisRSX, rightSideY, rightIrisRSY) / 2;
+//
+//                //LeftEyeDiameter
+//                correct[2][count] = Distance(leftIrisX, rightIrisX, leftIrisY, rightIrisY);
+//
+//                //RightEyeDiameter
+//                correct[3][count] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
+//
+//                //DepthForRightSide
+//                correct[4][count] = landmarks.get(323).getZ() * 100;
+//                Log.v("depth", String.valueOf(landmarks.get(323).getZ()*100));
+//
+//                //DepthUpDown
+//                correct[5][count] = Distance(foreheadUpX, foreheadDownX, foreheadUpY, foreheadDownY);
+//
+//                //VerticalSide
+//                correct[6][count] = (float) Angle(noseBridgeX, leftcenterX, noseBridgeX + 10
+//                        , noseBridgeY, leftcenterY, noseBridgeY + 10);
+//
+//                //Scale
+//                correct[7][count] = dist / irisDist;
+//
+//                count++;
+//
+//            } else {
+//                medianPhoneTurnL = median.Median(correct);
+//                }
+//                flag++;
+//                Log.v("pip", "WORKPhoneTurnL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                runThread();
+//            }
     }
+
+    private void PopUp(String text){
+        runOnUiThread(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        text, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }));
+    }
+
     private void runThread(){
         runOnUiThread (new Thread(new Runnable() {
             public void run() {
+                //Log.v("depth", String.valueOf(medianTrue[4]));
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);;
                 SharedPreferences.Editor ed = mSettings.edit();
-                ed.putFloat("IrisDiameterLeft", LeftEyeDiameter);
-                ed.putFloat("IrisDiameterRight", RightEyeDiameter);
-                ed.putFloat("HorizontalSideLeft", HorizontalSideLeft);
-                ed.putFloat("HorizontalSideRight", HorizontalSideRight);
-                ed.putFloat("VerticalSide", VerticalSide);
-                ed.putFloat("Depth", DepthForRightSide);
-                ed.putFloat("DepthUpDown", DepthUpDown);
-                ed.putFloat("noseScale", Scale);
+                ed.putFloat("IrisDiameterLeft", (float) medianTrue[2]);
+                ed.putFloat("IrisDiameterRight", (float) medianTrue[3]);
+                ed.putFloat("HorizontalSideLeft", (float)medianTrue[0]);
+                ed.putFloat("HorizontalSideRight", (float)medianTrue[1]);
+                ed.putFloat("VerticalSide", (float) medianTrue[6]);
+                ed.putFloat("Depth", (float) medianTrue[4]);
+                ed.putFloat("DepthUpDown", (float) medianTrue[5]);
+                ed.putFloat("noseScale", (float) medianTrue[7]);
                 ed.apply();
-                Log.v("CALIBRA", VerticalSide + " " + "AAAAAAAAAAAAAAAAAAAAAAA");
+                //Log.v("CALIBRA", VerticalSide + " " + "AAAAAAAAAAAAAAAAAAAAAAA");
                 AlertDialog.Builder a_builder = new AlertDialog.Builder(Calibration.this);
                 a_builder.setMessage("Калибровка завершена")
                         .setCancelable(false)

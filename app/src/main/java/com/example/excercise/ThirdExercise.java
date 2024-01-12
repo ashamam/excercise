@@ -41,6 +41,7 @@ import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
 import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
 
 import java.util.List;
+import java.util.Objects;
 
 /** Main activity of MediaPipe Face Mesh app. */
 public class ThirdExercise extends AppCompatActivity {
@@ -166,8 +167,8 @@ public class ThirdExercise extends AppCompatActivity {
             String[] cameraIds = manager.getCameraIdList();
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraIds[1]);
             //303 gain in scientific way!
-            FOCAL_LENGTH = (float) (characteristics.get(CameraCharacteristics
-                    .LENS_INFO_AVAILABLE_FOCAL_LENGTHS)[0] * 303.03);
+            FOCAL_LENGTH = (float) (Objects.requireNonNull(characteristics.get(CameraCharacteristics
+                    .LENS_INFO_AVAILABLE_FOCAL_LENGTHS))[0] * 303.03);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

@@ -6,12 +6,15 @@
 
     <uses-sdk
         android:minSdkVersion="21"
-        android:targetSdkVersion="30" />
+        android:targetSdkVersion="33" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" /> <!-- For loading images from gallery -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- For using the camera -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- <uses-feature android:name="android.hardware.camera" /> -->
@@ -48,7 +51,8 @@
 <!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
