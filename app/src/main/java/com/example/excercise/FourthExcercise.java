@@ -314,7 +314,6 @@ public class FourthExcercise extends AppCompatActivity {
                     leftIrisY, rightIrisY));
 
             //depth
-            //Log.v("depth", "ny pizda" + landmarks.get(323).getZ() * 100);
             correct[2][data] = landmarks.get(323).getZ() * 100;
             //irisDiameterRightNew
             correct[3][data] = Distance(rightIrisRSX, rightIrisLSX, rightIrisRSY, rightIrisLSY);
@@ -323,7 +322,6 @@ public class FourthExcercise extends AppCompatActivity {
             data++;
         } else {
             medianActual = median.Median(correct);
-            //Log.v("depth", "ny pizda" + medianActual[2]);
             ScaleNew = medianActual[0];
             dist = medianActual[1];
             depth = medianActual[2];
